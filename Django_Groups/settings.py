@@ -26,11 +26,11 @@ SECRET_KEY = 'q#9x1+6-2ovnt=xevrk%%l!q8*5^)h#u^=oc-m3sg#sp&&)x+h'
 DEBUG = True
 
 
-# ALLOWED_HOSTS = []
-ALLOWED_HOSTS = ['18.188.64.112','ec2-18-188-64-112.us-east-2.compute.amazonaws.com']
+ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = ['18.188.64.112','ec2-18-188-64-112.us-east-2.compute.amazonaws.com']
 
 
-https://github.com/incomparable/aws.git
+
 
 # Application definition
 
@@ -139,4 +139,3 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-STATIC_ROOT = "/home/ubuntu/text_aws/static/"

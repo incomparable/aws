@@ -4,8 +4,9 @@ from __future__ import unicode_literals
 # from django.contrib.auth import login, authenticate
 # from django.contrib.auth import update_session_auth_hash
 from django.shortcuts import render, redirect
-from .forms import SignUpForm, LoginForm, BookForm, BookAuthorForm, UpdateBookForm, EmployeeForm, UpdateEmployeeForm, UserDataForm
-from django.contrib import  messages
+from .forms import SignUpForm, LoginForm, BookForm, BookAuthorForm, UpdateBookForm, EmployeeForm, UpdateEmployeeForm, \
+    UserDataForm
+from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash, login, authenticate, logout, login as auth_login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
@@ -19,266 +20,260 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import json
 
 
-
 # Create your views here.
 
 def signup(request):
-	if request.method == 'POST':
-		form = SignUpForm(request.POST)
-		if form.is_valid():
-			form.save()
-			messages.add_message(request, messages.INFO, 
-        		'You have been successfully registered, now you can Login.')
-			return redirect('user_login')
-	else:
-		form = SignUpForm()
-	return render(request, 'signup.html', {'form': form})
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.add_message(request, messages.INFO,
+                                 'You have been successfully registered, now you can Login.')
+            return redirect('user_login')
+    else:
+        form = SignUpForm()
+    return render(request, 'signup.html', {'form': form})
 
 
 def user_login(request):
-	if request.method == 'POST':
-		username  = request.POST.get('username')
-		password  = request.POST.get('password')
-		user = authenticate(username= username, password= password)
-		if user:
-			auth_login(request, user)
-			return redirect(home)
-		else:
-			messages.add_message(request, messages.INFO,'The username and/or password you specified are not correct.')
-			return redirect('user_login')
-	else:
-		form = LoginForm()
-		return render(request, 'login.html', {'form':form})
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(username=username, password=password)
+        if user:
+            auth_login(request, user)
+            return redirect(home)
+        else:
+            messages.add_message(request, messages.INFO, 'The username and/or password you specified are not correct.')
+            return redirect('user_login')
+    else:
+        form = LoginForm()
+        return render(request, 'login.html', {'form': form})
 
 
 @login_required
 def user_logout(request):
-	logout(request)
-	return redirect(user_login)
+    logout(request)
+    return redirect(user_login)
 
-register = template.Library() 
+
+register = template.Library()
+
 
 @login_required
 def home(request):
-	return render(request, 'home.html', {})
+    return render(request, 'home.html', {})
+
 
 @login_required
 def add_book_author(request):
-	if request.method == 'POST':
-		form = BookAuthorForm(request.POST)
-		if form.is_valid():
-			form.save()
-			messages.add_message(request, messages.INFO, 'Added Book Author Successfully...!')
-			return redirect(add_book_author)
-	else:
-		form = BookAuthorForm()
-	return render(request, 'add_book_author.html', {'form':form})
+    if request.method == 'POST':
+        form = BookAuthorForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.add_message(request, messages.SUCCESS, 'Added Book Author Successfully...!')
+            return redirect(add_book_author)
+    else:
+        form = BookAuthorForm()
+    return render(request, 'add_book_author.html', {'form': form})
 
 
 @login_required
 def add_book(request):
-	if request.method == 'POST':
-		form = BookForm(request.POST, request.FILES)
-		if form.is_valid():
-			form.save()
-			messages.add_message(request, messages.INFO,'Saved Successfully...!')
-			return redirect(add_book)
-		else:
-			if request.method == 'POST':
-				form = BookForm()
-				book_obj = Book.objects.all()
-				page = request.GET.get('page', 1)
-				paginator = Paginator(book_obj, 3)
-				user = paginator.page(page)
+    if request.method == 'POST':
+        form = BookForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.add_message(request, messages.INFO, 'Saved Successfully...!')
+            return redirect(add_book)
+        else:
+            if request.method == 'POST':
+                form = BookForm()
+                book_obj = Book.objects.all()
+                page = request.GET.get('page', 1)
+                paginator = Paginator(book_obj, 3)
+                user = paginator.page(page)
 
-				book_title  = request.POST.get('book_title')
-				series 	    = request.POST.get('series')
-				author_name = request.POST.get('author_name')
-				pages       = request.POST.get('pages')
+                book_title = request.POST.get('book_title')
+                series = request.POST.get('series')
+                author_name = request.POST.get('author_name')
+                pages = request.POST.get('pages')
 
-				if book_title and series:
-					search_book_obj = Book.objects.filter(book_title__icontains=book_title, series=series)
-					return render(request, 'add_book.html', {'form':form, 'books':user, 'search_book':search_book_obj})
+                if book_title and series:
+                    search_book_obj = Book.objects.filter(book_title__icontains=book_title, series=series)
+                    return render(request, 'add_book.html',
+                                  {'form': form, 'books': user, 'search_book': search_book_obj})
 
-				elif series:
-					print "------Series------>",series
-					search_book_obj = Book.objects.filter(series__icontains=series)
-					return render(request, 'add_book.html', {'form':form, 'books':user, 'search_book':search_book_obj})
+                elif series:
+                    search_book_obj = Book.objects.filter(series__icontains=series)
+                    return render(request, 'add_book.html',
+                                  {'form': form, 'books': user, 'search_book': search_book_obj})
 
-				elif author_name:
-					print "------author_name------>",author_name
-					search_book_obj1 = Book_Author.objects.filter(name__icontains=author_name)
-					if search_book_obj1:
-						print "---------search_book_obj1-------->",search_book_obj1
-						search_book_obj = Book.objects.filter(author_name=search_book_obj1)
-						return render(request, 'add_book.html', {'form':form, 'books':user, 'search_book':search_book_obj})
-					else:
-						return render(request, 'add_book.html', {'form':form, 'books':user})
-						
-				elif pages:
-					search_book_obj = Book.objects.filter(pages__icontains=pages)
-					return render(request, 'add_book.html', {'form':form, 'books':user, 'search_book':search_book_obj})
+                elif author_name:
+                    search_book_obj1 = Book_Author.objects.filter(name__icontains=author_name)
+                    if search_book_obj1:
+                        search_book_obj = Book.objects.filter(author_name=search_book_obj1)
+                        return render(request, 'add_book.html',
+                                      {'form': form, 'books': user, 'search_book': search_book_obj})
+                    else:
+                        return render(request, 'add_book.html', {'form': form, 'books': user})
 
-				elif book_title:
-					search_book_obj = Book.objects.filter(book_title__icontains=book_title)
-					return render(request, 'add_book.html', {'form':form, 'books':user, 'search_book':search_book_obj})
-				else:
-					return render(request, 'add_book.html', {'form':form, 'books':user})
-			else:
-				return redirect('add_book')
-	else:
-		form = BookForm()
-		book_obj = Book.objects.all()
-		page = request.GET.get('page', 1)
-		paginator = Paginator(book_obj, 3)
-		try:
-			user = paginator.page(page)
-		except PageNotAnInteger:
-			user = paginator.page(1)
-		except EmptyPage:
-			user = paginator.page(paginator.num_pages)
-		return render(request, 'add_book.html', {'form':form, 'books':user})
+                elif pages:
+                    search_book_obj = Book.objects.filter(pages__icontains=pages)
+                    return render(request, 'add_book.html',
+                                  {'form': form, 'books': user, 'search_book': search_book_obj})
 
-
-@login_required
-def delete_book(request,id):
-	book_obj = Book.objects.get(id=id)
-	book_obj.delete()
-	messages.add_message(request, messages.INFO,'Delete Successfully...!')
-	return redirect('add_book')
+                elif book_title:
+                    search_book_obj = Book.objects.filter(book_title__icontains=book_title)
+                    return render(request, 'add_book.html',
+                                  {'form': form, 'books': user, 'search_book': search_book_obj})
+                else:
+                    return render(request, 'add_book.html', {'form': form, 'books': user})
+            else:
+                return redirect('add_book')
+    else:
+        form = BookForm()
+        book_obj = Book.objects.all()
+        page = request.GET.get('page', 1)
+        paginator = Paginator(book_obj, 3)
+        try:
+            user = paginator.page(page)
+        except PageNotAnInteger:
+            user = paginator.page(1)
+        except EmptyPage:
+            user = paginator.page(paginator.num_pages)
+        return render(request, 'add_book.html', {'form': form, 'books': user})
 
 
 @login_required
-def update_book(request,id):
-	book_obj = Book.objects.get(id=id)
-	if request.method == 'POST':
-		form = UpdateBookForm(request.POST, instance=book_obj)
-		if form.is_valid():
-			form.save()
-			messages.add_message(request, messages.INFO,'Update Successfully...!')
-			return redirect('add_book')
-		return render(request, 'update_book.html', {'form':form})
-	else:
-		form = UpdateBookForm(instance=book_obj)
-	return render(request, 'update_book.html', {'form':form})
+def delete_book(request, id):
+    book_obj = Book.objects.get(id=id)
+    book_obj.delete()
+    messages.add_message(request, messages.INFO, 'Delete Successfully...!')
+    return redirect('add_book')
+
+
+@login_required
+def update_book(request, id):
+    book_obj = Book.objects.get(id=id)
+    if request.method == 'POST':
+        form = UpdateBookForm(request.POST, instance=book_obj)
+        if form.is_valid():
+            form.save()
+            messages.add_message(request, messages.INFO, 'Update Successfully...!')
+            return redirect('add_book')
+        return render(request, 'update_book.html', {'form': form})
+    else:
+        form = UpdateBookForm(instance=book_obj)
+    return render(request, 'update_book.html', {'form': form})
 
 
 @login_required
 def change_password(request):
-	if request.method == 'POST':
-		form = PasswordChangeForm(request.user, request.POST)
-		if form.is_valid():
-			user = form.save()
-			update_session_auth_hash(request, user)
-			messages.success(request, _('Your password was successfully updated!'))
-			return redirect('change_password')
-		else:
-			messages.error(request, _('Please correct the error.'))
-	else:
-		form = PasswordChangeForm(request.user)
-	return render(request, 'change_password.html', {'form':form})
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            messages.success(request, _('Your password was successfully updated!'))
+            return redirect('change_password')
+        else:
+            messages.error(request, _('Please correct the error.'))
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'change_password.html', {'form': form})
 
 
 def group(request):
-	group_obj  = Group.objects.all()
-	group_obj2 = Group.objects.get(name='All_User')
-	group_obj3 = Group.objects.filter(name='Test')
-	group = Group.objects.get(name='MyGroup')
-	user  = User.objects.get(username='ishaan')
-	user.groups.add(group)
-	
-	print "All Groups ======>",group_obj
-	print "Single Group ======>", group_obj2
-	print "Single Group ======>", group_obj3
-	print "New Group =======>", group
-	print "1 user ==========>", user
+    group_obj = Group.objects.all()
+    group_obj2 = Group.objects.get(name='All_User')
+    group_obj3 = Group.objects.filter(name='Test')
+    group = Group.objects.get(name='MyGroup')
+    user = User.objects.get(username='ishaan')
+    user.groups.add(group)
+    return HttpResponse("Group test...!")
 
-	return HttpResponse("Group test...!")
 
 @login_required
 def add_employee(request):
-	if request.method == 'POST':
-		form = EmployeeForm(request.POST)
-		if form.is_valid():
-			form.save()
-			messages.add_message(request, messages.INFO,'Added successfully...!')
-			return redirect('add_employee')
-	else:
-		form = EmployeeForm()
-		emp_obj = Employee.objects.all()
-	return render(request, 'add_employee.html', {'form':form, 'employee':emp_obj})
+    if request.method == 'POST':
+        form = EmployeeForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.add_message(request, messages.INFO, 'Added successfully...!')
+            return redirect('add_employee')
+    else:
+        form = EmployeeForm()
+        emp_obj = Employee.objects.all()
+    return render(request, 'add_employee.html', {'form': form, 'employee': emp_obj})
 
 
 @login_required
-def delete_employee(request,id):
-	emp_obj = Employee.objects.get(id=id)
-	emp_obj.delete()
-	messages.add_message(request, messages.INFO,'Delete Successfully...!')
-	return redirect('add_employee')
+def delete_employee(request, id):
+    emp_obj = Employee.objects.get(id=id)
+    emp_obj.delete()
+    messages.add_message(request, messages.INFO, 'Delete Successfully...!')
+    return redirect('add_employee')
 
 
 @login_required
-def edit_employee(request,id):
-	emp_obj = Employee.objects.get(id=id)
-	if request.method == 'POST':
-		form = UpdateEmployeeForm(request.POST, instance=emp_obj)
-		if form.is_valid():
-			form.save()
-			messages.add_message(request, messages.INFO,'Update Successfully...!')
-			return redirect('add_employee')
-		return render(request, 'update_employee.html', {'form':form})
-	else:
-		form = UpdateEmployeeForm(instance=emp_obj)
-	return render(request, 'update_employee.html', {'form':form})
+def edit_employee(request, id):
+    emp_obj = Employee.objects.get(id=id)
+    if request.method == 'POST':
+        form = UpdateEmployeeForm(request.POST, instance=emp_obj)
+        if form.is_valid():
+            form.save()
+            messages.add_message(request, messages.INFO, 'Update Successfully...!')
+            return redirect('add_employee')
+        return render(request, 'update_employee.html', {'form': form})
+    else:
+        form = UpdateEmployeeForm(instance=emp_obj)
+    return render(request, 'update_employee.html', {'form': form})
 
 
 def user_data(request):
-	if request.method == 'POST':
-		form = UserDataForm(request.POST)
-		if form.is_valid():
-			form.save()
-		# user_obj = User.objects.all()
-			username = request.POST.get('username')
-			age      = request.POST.get('age')
-		# print"User Username ==========>",username
-		# print"User age ==========>",age
-		# user_data_obj = User_Data(username=username, age=age, instance=user_obj)
-		# user_data_obj.save()
-			print"User Username ==========>",username
-			print"User age ==========>",age
-			messages.add_message(request, messages.INFO, 'Added successfully...!')
-			return redirect('userdata')
-	else:
-		# user_obj = User.objects.all()
-		form = UserDataForm()
-	return render(request, 'userdata.html', {'form':form})
+    if request.method == 'POST':
+        form = UserDataForm(request.POST)
+        if form.is_valid():
+            form.save()
+
+            username = request.POST.get('username')
+            age = request.POST.get('age')
+
+            messages.add_message(request, messages.INFO, 'Added successfully...!')
+            return redirect('userdata')
+    else:
+        # user_obj = User.objects.all()
+        form = UserDataForm()
+    return render(request, 'userdata.html', {'form': form})
 
 
 @login_required
 def get_book_data(request):
-	data = json.loads(request.POST.get("data"))
-        if data:
-            for item in data:
-                book_title = item.get('ajax_book_title', None)
+    data = json.loads(request.POST.get("data"))
+    if data:
+        for item in data:
+            book_title = item.get('ajax_book_title', None)
+        
+            image = item.get('ajax_book_image', None)
+            book_image1 = image.split('/', 2)[2]
+            book_image = "/" + book_image1
+        
+            book_id = item.get('ajax_id', None)
+            author_name = item.get('ajax_author_name', None)
+            series = item.get('ajax_series', None)
+            description = item.get('ajax_description', None)
+            pages = item.get('ajax_pages', None)
 
-                image = item.get('ajax_book_image', None)
-                book_image1 = image.split('/', 2)[2]
-                book_image = "/"+book_image1
+        if book_title:
+            book_author_obj = Book_Author.objects.get(name=author_name)
+            book_obj = Book(book_title=book_title, book_image=book_image, id=book_id, series=series,
+                            description=description, pages=pages, author_name=book_author_obj)
+            book_obj.save()
+            return JsonResponse(True, safe=False)
 
-                book_id = item.get('ajax_id', None)
-                author_name = item.get('ajax_author_name', None)
-                series = item.get('ajax_series', None)
-                description = item.get('ajax_description', None)
-                pages = item.get('ajax_pages', None)
-
-                if book_title:
-				book_author_obj = Book_Author.objects.get(name=author_name)
-				book_obj = Book(book_title=book_title, book_image=book_image, id=book_id, series=series, 
-								description=description, pages=pages, author_name=book_author_obj)
-				book_obj.save()
-				return JsonResponse(True, safe=False)
-		else:
-			return JsonResponse(False, safe=False)
+    else:
+        return JsonResponse(False, safe=False)
 
 
 # @login_required
@@ -295,7 +290,7 @@ def get_book_data(request):
 #
 # 			if book_title:
 # 				book_author_obj = Book_Author.objects.get(name=author_name)
-# 				book_obj = Book(book_title=book_title, book_image=book_image, id=book_id, series=series, 
+# 				book_obj = Book(book_title=book_title, book_image=book_image, id=book_id, series=series,
 # 								description=description, pages=pages, author_name=book_author_obj)
 # 				book_obj.save()
 # 				return JsonResponse(True, safe=False)
@@ -309,17 +304,12 @@ def get_book_data(request):
 
 @login_required
 def delete_book_data(request):
-	if request.method == 'POST':
-		if request.is_ajax():
-			book_id = request.POST.get('id')
-			print "============ Book ID ==============>",book_id
-			if book_id:
-				book_obj = Book.objects.get(id=book_id)
-				book_obj.delete()
-				return JsonResponse(True, safe=False)
-			else:
-				return JsonResponse(False, safe=False)
-		else:
-			print "Ajax not working"
-	else:
-			print "Ajax not working"
+    if request.method == 'POST':
+        if request.is_ajax():
+            book_id = request.POST.get('id')
+            if book_id:
+                book_obj = Book.objects.get(id=book_id)
+                book_obj.delete()
+                return JsonResponse(True, safe=False)
+        else:
+            JsonResponse(False, safe=False)

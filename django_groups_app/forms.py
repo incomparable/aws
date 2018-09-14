@@ -5,7 +5,6 @@ from .models import Book, Book_Author, Employee, User_Data
 from django.contrib.auth.forms import AuthenticationForm
 
 
-
 class SignUpForm(UserCreationForm):
 	class Meta:
 		model = User
@@ -17,6 +16,7 @@ class SignUpForm(UserCreationForm):
 			'last_name': forms.TextInput(attrs={'class':'form-control', 'placeholder':'Enter last name',}),
 			'email': forms.EmailInput(attrs={'class':'form-control',  'placeholder':'Enter email',}),	
 		}
+
 
 class LoginForm(AuthenticationForm):
 	class Meta:
@@ -32,12 +32,12 @@ class BookForm(forms.ModelForm):
 
 		widgets = {
 			'book_title' 	: forms.TextInput(attrs={'class':'form-control','required':True, 'autofocus':''}),
-			'book_image'	: forms.FileInput(attrs={'class':'form-control'}),
+			'book_image'	: forms.FileInput(attrs={'class':'form-control','multiple': True, 'accept':'image/*'}),
 			'series'	 	: forms.NumberInput(attrs={'class':'form-control','required':True}),
 			'description'	: forms.Textarea(attrs={'class':'form-control','required':True}),
 			'pages'		 	: forms.NumberInput(attrs={'class':'form-control','required':True}),
-		
 		}
+
 
 class BookAuthorForm(forms.ModelForm):
 	class Meta:
@@ -46,6 +46,7 @@ class BookAuthorForm(forms.ModelForm):
 		widgets = {
 			'name' : forms.TextInput(attrs={'class':'form-control', 'required':True, 'autofocus':'', 'placeholder':'Author name'})
 		}
+
 
 class UpdateBookForm(forms.ModelForm):
 	class Meta:
@@ -77,6 +78,7 @@ class EmployeeForm(forms.ModelForm):
 																						'required':True}),
 		}
 		
+
 class UpdateEmployeeForm(forms.ModelForm):
 	class Meta:
 		model 	= Employee

@@ -1,23 +1,8 @@
 {% extends 'base.html' %}
 {% block title %}{% endblock %}
-		<style>
 
-		#form {
-			margin-top: 20px;
-		}
-
-		#color{
-			text-align:center;
-			color:White;
-			background: grey;
-			font-size: 15px;
-		}
-		#center{
-			text-align: center;
-		}
-
-		</style>
-				<script>
+{% block content %}
+		<script>
 			$(document).ready(function(){
 			    $("#hide").click(function(){
 			        $(".allsearch").hide(1000);
@@ -27,13 +12,11 @@
 			    });
 			});
 		</script>
-{% block content %}
-
 			<div class="row">
 				<div class="col-sm-4">
 
 					<div class="panel-group">
-	        			<div class="panel panel-default" id="form" >
+	        			<div class="panel panel-default" style="margin-top: 20px;">
 	        				<div class="panel-heading" style="text-align:center;"><h4>Add Book Record</h4></div>
 	        				<div class="panel-body">
 	        					<form method="post" enctype="multipart/form-data">
@@ -50,33 +33,25 @@
 				</div>
 
 				<div class="col-sm-8">
-					<div class="tab-content" id="myTabContent">
-    {% if messages %}
-        <div class="alert alert-success" style="margin-top:-60px;">
-            {% for message in messages %}
-                {{ message }}
-            {% endfor %}
-        </div>
-    {% endif %}
-</div>
+
 
 					<div class="panel-group">
-							<div class="panel panel-default" id="form" >
+							<div class="panel panel-default" style="margin-top: 20px;">
 		        				<div class="panel-heading" style="text-align:center;"><h4>View Book Record</h4>
 		        				</div>
 		        				<div class="panel-body">
 									<table class= "table table-hover table-bordered"  >
 										<thead>
 											<tr>
-												<th id="color">ID</th>
-												<th id="color">Book Title</th>
-												<th id="color">Book Image</th>
-												<th id="color">Series</th>
-												<th id="color">Author Name</th>
-												<th id="color">Description</th>
-												<th id="color">Pages</th>
-												<th id="color">Update</th>
-												<th id="color">Delete</th>
+												<th style="text-align:center; color:White; background: grey; font-size: 15px;">ID</th>
+												<th style="text-align:center; color:White; background: grey; font-size: 15px;">Book Title</th>
+												<th style="text-align:center; color:White; background: grey; font-size: 15px;">Book Image</th>
+												<th style="text-align:center; color:White; background: grey; font-size: 15px;">Series</th>
+												<th style="text-align:center; color:White; background: grey; font-size: 15px;">Author Name</th>
+												<th style="text-align:center; color:White; background: grey; font-size: 15px;">Description</th>
+												<th style="text-align:center; color:White; background: grey; font-size: 15px;">Pages</th>
+												<th style="text-align:center; color:White; background: grey; font-size: 15px;">Update</th>
+												<th style="text-align:center; color:White; background: grey; font-size: 15px;">Delete</th>
 											
 											</tr>
 										</thead>
@@ -110,10 +85,17 @@
             						</div>
 
 								</div>
-							
+
 								{% if messages %}
-		                      		<p class="alert alert-info" >{%for message in messages%}{%if forloop.first%}{{message}}{%endif%}{%endfor%}</p>
-		               			{% endif %}
+
+							        <div class="alert alert-success" id="myTabContent" >
+							            {% for message in messages %}
+							                {{ message }}
+							            {% endfor %}
+							        </div>
+							    {% endif %}
+								
+							
 
 								<div style="text-align: center;">
 						    		 <!-- Paginaor -->
@@ -145,12 +127,12 @@
 						</div>
 						
 						<button id="show" class="btn btn-default">Show Search</button>
-						<button id="hide" class="btn btn-default">Hide Search</button>
+						<div id="hide" class="btn btn-default">Hide Search</div>
 
 						<div class='row allsearch'>
 							<div class='col-sm-12'>
 								<div class="panel-group">
-									<div class="panel panel-default" id="form" >
+									<div class="panel panel-default" style="margin-top: 20px;" >
 				        				<div class="panel-heading" style="text-align:center;"><h4>Search Book Record</h4>
 				        				</div>
 				        				<div class="panel-body">
@@ -181,14 +163,14 @@
 												<table class= "table table-hover table-bordered"  >
 													<thead>
 														<tr>
-															<th id="color">ID</th>
-															<th id="color">Book Title</th>
-															<th id="color">Book Image</th>
-															<th id="color">Series</th>
-															<th id="color">Author Name</th>
-															<th id="color">Description</th>
-															<th id="color">Pages</th>
-															<th id="color">Action</th>
+															<th style="text-align:center; color:White; background: grey; font-size: 15px;">ID</th>
+															<th style="text-align:center; color:White; background: grey; font-size: 15px;">Book Title</th>
+															<th style="text-align:center; color:White; background: grey; font-size: 15px;">Book Image</th>
+															<th style="text-align:center; color:White; background: grey; font-size: 15px;">Series</th>
+															<th style="text-align:center; color:White; background: grey; font-size: 15px;">Author Name</th>
+															<th style="text-align:center; color:White; background: grey; font-size: 15px;">Description</th>
+															<th style="text-align:center; color:White; background: grey; font-size: 15px;">Pages</th>
+															<th style="text-align:center; color:White; background: grey; font-size: 15px;">Action</th>
 														
 														</tr>
 													</thead>
@@ -196,7 +178,7 @@
 													<tbody>
 
 														{% for book in search_book %}
-															<tr id="center">
+															<tr style="text-align: center;">
 																<td>{{ book.id }}</td>
 																<td>{{ book.book_title }}</td>
 																<td><img src="{{ book.book_image.url }}" class="tumbnail" width="50" height="50"></td>
@@ -204,7 +186,7 @@
 																<td>{{ book.author_name }}</td>
 																<td>{{ book.description }}</td>
 																<td>{{ book.pages }}</td>
-																<td id="center">
+																<td style="text-align: center;">
 																	<a href="edit_book/{{book.id}}">
 																		<span class="glyphicon glyphicon-edit" style="color: grey; font-size:19px;"  title="Update Book">
 																		</span>
@@ -292,8 +274,12 @@
 				$.post("get_book_data/", {"csrfmiddlewaretoken": $("input[name='csrfmiddlewaretoken']").val(),
                 "data" : JSON.stringify(data)},
                 function(response){
-                location.reload(true);
                 toastr["success"]("Data has been updated!")
+                $(ajax_book_titles).attr('readonly', true);
+				$(ajax_seriess).attr('readonly',true);
+				$(ajax_descriptions).attr('readonly',true)
+				$(ajax_pagess).attr('readonly',true)
+
             });
 				// with ajax
 				// $.ajax({
@@ -335,12 +321,22 @@
 					dataType : 'json',
 					success: function(data){
 						console.log(data)
+
+						if(data){
+
+						toastr["success"]("delete data successfully!")
 						$(ajax_book_delete).remove()
+						}
+						else {
+
+							toastr["error"]("something went wrong!")
+						}
 						
 					}
 				});
 
 			};
+			$('#myTabContent').fadeIn().delay(5000).fadeOut();
 		</script>
 
 		<script type="text/javascript">
