@@ -26,8 +26,8 @@ SECRET_KEY = 'q#9x1+6-2ovnt=xevrk%%l!q8*5^)h#u^=oc-m3sg#sp&&)x+h'
 DEBUG = True
 
 
-ALLOWED_HOSTS = []
-# ALLOWED_HOSTS = ['18.188.64.112','ec2-18-188-64-112.us-east-2.compute.amazonaws.com']
+# ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['18.188.64.112','ec2-18-188-64-112.us-east-2.compute.amazonaws.com']
 
 
 
