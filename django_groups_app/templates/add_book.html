@@ -40,6 +40,7 @@
 		        				<div class="panel-heading" style="text-align:center;"><h4>View Book Record</h4>
 		        				</div>
 		        				<div class="panel-body">
+								<div style="overflow-x:auto;">
 									<table class= "table table-hover table-bordered"  >
 										<thead>
 											<tr>
@@ -80,6 +81,7 @@
 
 										</tbody>
 									</table>
+								</div>
 									<div>
             							{{ books.start_index }} to {{ books.end_index }} of {{ books.paginator.count }}.
             						</div>
@@ -159,7 +161,7 @@
 
 													</div><hr>
 												</form>
-													
+													<div style="overflow-x:auto;">
 												<table class= "table table-hover table-bordered"  >
 													<thead>
 														<tr>
@@ -200,7 +202,7 @@
 														{% endfor %}
 
 													</tbody>
-											</table>
+											</table></div>
 										</div>
 									</div>
 								</div>
