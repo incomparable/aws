@@ -26,7 +26,10 @@ def signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
-            form.save()
+            fs= form.save(commit=False)
+            fs.current_user= request.user.id
+            fs.save()
+            # form.save()
             messages.add_message(request, messages.INFO,
                                  'You have been successfully registered, now you can Login.')
             return redirect('user_login')
@@ -70,7 +73,11 @@ def add_book_author(request):
     if request.method == 'POST':
         form = BookAuthorForm(request.POST)
         if form.is_valid():
-            form.save()
+            fs= form.save(commit=False)
+            fs.current_user= request.user.id
+            fs.save()
+
+            # form.save()
             messages.add_message(request, messages.SUCCESS, 'Added Book Author Successfully...!')
             return redirect(add_book_author)
     else:
@@ -83,13 +90,16 @@ def add_book(request):
     if request.method == 'POST':
         form = BookForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            fs= form.save(commit=False)
+            fs.current_user= request.user.id
+            fs.save()
+            # form.save()
             messages.add_message(request, messages.INFO, 'Saved Successfully...!')
             return redirect(add_book)
         else:
             if request.method == 'POST':
                 form = BookForm()
-                book_obj = Book.objects.all()
+                book_obj = Book.objects.filter(current_user=request.user.id)
                 page = request.GET.get('page', 1)
                 paginator = Paginator(book_obj, 3)
                 user = paginator.page(page)
@@ -100,31 +110,31 @@ def add_book(request):
                 pages = request.POST.get('pages')
 
                 if book_title and series:
-                    search_book_obj = Book.objects.filter(book_title__icontains=book_title, series=series)
+                    search_book_obj = Book.objects.filter(book_title__icontains=book_title, series=series, current_user=request.user.id)
                     return render(request, 'add_book.html',
                                   {'form': form, 'books': user, 'search_book': search_book_obj})
 
                 elif series:
-                    search_book_obj = Book.objects.filter(series__icontains=series)
+                    search_book_obj = Book.objects.filter(series__icontains=series, current_user=request.user.id)
                     return render(request, 'add_book.html',
                                   {'form': form, 'books': user, 'search_book': search_book_obj})
 
                 elif author_name:
-                    search_book_obj1 = Book_Author.objects.filter(name__icontains=author_name)
+                    search_book_obj1 = Book_Author.objects.filter(name__icontains=author_name, current_user=request.user.id)
                     if search_book_obj1:
-                        search_book_obj = Book.objects.filter(author_name=search_book_obj1)
+                        search_book_obj = Book.objects.filter(author_name=search_book_obj1, current_user=request.user.id)
                         return render(request, 'add_book.html',
                                       {'form': form, 'books': user, 'search_book': search_book_obj})
                     else:
                         return render(request, 'add_book.html', {'form': form, 'books': user})
 
                 elif pages:
-                    search_book_obj = Book.objects.filter(pages__icontains=pages)
+                    search_book_obj = Book.objects.filter(pages__icontains=pages, current_user=request.user.id)
                     return render(request, 'add_book.html',
                                   {'form': form, 'books': user, 'search_book': search_book_obj})
 
                 elif book_title:
-                    search_book_obj = Book.objects.filter(book_title__icontains=book_title)
+                    search_book_obj = Book.objects.filter(book_title__icontains=book_title, current_user=request.user.id)
                     return render(request, 'add_book.html',
                                   {'form': form, 'books': user, 'search_book': search_book_obj})
                 else:
@@ -133,7 +143,9 @@ def add_book(request):
                 return redirect('add_book')
     else:
         form = BookForm()
-        book_obj = Book.objects.all()
+
+        book_obj = Book.objects.filter(current_user=request.user.id)
+        
         page = request.GET.get('page', 1)
         paginator = Paginator(book_obj, 3)
         try:
@@ -159,7 +171,10 @@ def update_book(request, id):
     if request.method == 'POST':
         form = UpdateBookForm(request.POST, instance=book_obj)
         if form.is_valid():
-            form.save()
+            fs= form.save(commit=False)
+            fs.current_user= request.user.id
+            fs.save()
+            # form.save()
             messages.add_message(request, messages.INFO, 'Update Successfully...!')
             return redirect('add_book')
         return render(request, 'update_book.html', {'form': form})
@@ -173,8 +188,11 @@ def change_password(request):
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
-            user = form.save()
-            update_session_auth_hash(request, user)
+            fs= form.save(commit=False)
+            fs.current_user= request.user.id
+            fs.save()
+            # user = form.save()
+            update_session_auth_hash(request, request.user)
             messages.success(request, _('Your password was successfully updated!'))
             return redirect('change_password')
         else:
@@ -184,8 +202,9 @@ def change_password(request):
     return render(request, 'change_password.html', {'form': form})
 
 
+@login_required
 def group(request):
-    group_obj = Group.objects.all()
+    group_obj = Group.objects.filter(current_user=request.user.id)
     group_obj2 = Group.objects.get(name='All_User')
     group_obj3 = Group.objects.filter(name='Test')
     group = Group.objects.get(name='MyGroup')
@@ -199,12 +218,15 @@ def add_employee(request):
     if request.method == 'POST':
         form = EmployeeForm(request.POST)
         if form.is_valid():
-            form.save()
+            fs= form.save(commit=False)
+            fs.current_user= request.user.id
+            fs.save()
+            # form.save()
             messages.add_message(request, messages.INFO, 'Added successfully...!')
             return redirect('add_employee')
     else:
         form = EmployeeForm()
-        emp_obj = Employee.objects.all()
+        emp_obj = Employee.objects.filter(current_user=request.user.id)
     return render(request, 'add_employee.html', {'form': form, 'employee': emp_obj})
 
 
@@ -222,7 +244,10 @@ def edit_employee(request, id):
     if request.method == 'POST':
         form = UpdateEmployeeForm(request.POST, instance=emp_obj)
         if form.is_valid():
-            form.save()
+            fs= form.save(commit=False)
+            fs.current_user= request.user.id
+            fs.save()
+            # form.save()
             messages.add_message(request, messages.INFO, 'Update Successfully...!')
             return redirect('add_employee')
         return render(request, 'update_employee.html', {'form': form})
@@ -231,11 +256,15 @@ def edit_employee(request, id):
     return render(request, 'update_employee.html', {'form': form})
 
 
+@login_required
 def user_data(request):
     if request.method == 'POST':
         form = UserDataForm(request.POST)
         if form.is_valid():
-            form.save()
+            fs= form.save(commit=False)
+            fs.current_user= request.user.id
+            fs.save()
+            # form.save()
 
             username = request.POST.get('username')
             age = request.POST.get('age')
@@ -256,9 +285,16 @@ def get_book_data(request):
             book_title = item.get('ajax_book_title', None)
         
             image = item.get('ajax_book_image', None)
-            book_image1 = image.split('/', 2)[2]
+            book_image1 = image.split('/', 4)[4]
             book_image = "/" + book_image1
-        
+
+            # print(image, '.....675767657675.....', book_image1)
+
+            # print('..................', book_image)
+
+            # print('......................image/book_image/mysql_1_SJstDpr.png')
+
+            # print('/media/image/book_image/image/book_image/mysql_1_oQEEgci.png')
             book_id = item.get('ajax_id', None)
             author_name = item.get('ajax_author_name', None)
             series = item.get('ajax_series', None)
@@ -268,7 +304,7 @@ def get_book_data(request):
         if book_title:
             book_author_obj = Book_Author.objects.get(name=author_name)
             book_obj = Book(book_title=book_title, book_image=book_image, id=book_id, series=series,
-                            description=description, pages=pages, author_name=book_author_obj)
+                            description=description, pages=pages, author_name=book_author_obj, current_user= request.user.id)
             book_obj.save()
             return JsonResponse(True, safe=False)
 

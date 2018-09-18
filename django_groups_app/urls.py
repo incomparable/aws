@@ -4,8 +4,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-	url(r'^$', views.signup, name='signup'),
-	url(r'^user_login', views.user_login, name='user_login'),
+	url(r'^signup', views.signup, name='signup'),
+	url(r'^accounts/login/', views.user_login, name='user_login'),
 	url(r'^user_logout', views.user_logout, name='user_logout'),
 	url(r'^home', views.home, name='home'),
 	url(r'^add_book', views.add_book, name='add_book'),
@@ -19,6 +19,6 @@ urlpatterns = [
 	url(r'^edit_employee/(?P<id>\d+)/', views.edit_employee, name='edit_employee'),
 	url(r'^userdata', views.user_data, name='userdata'),
 	url(r'^get_book_data', views.get_book_data, name='get_book_data'),
-	url(r'^delete_book_data', views.delete_book_data, name='delete_book_data')
+	url(r'^delete_book_data', views.delete_book_data, name='delete_book_data'),
 	
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) 

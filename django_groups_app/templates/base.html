@@ -9,12 +9,20 @@
 
 		<link rel="shortcut icon" type="static/x-icon" href="/static/favicon.ico">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-		<link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
+		<!-- <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" /> -->
 
 
-	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    	<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
+	    <script type="text/javascript" src="{% static 'jquery.min.js' %}"></script>
+	    <script type="text/javascript" src="{% static 'bootstrap.min.js' %}"></script>
+		<script type="text/javascript" src="{% static 'toastr.min.js' %}"></script>	    
+
+	    <link href="{% static 'toastr.min.css' %}"  rel="stylesheet" type="text/css"/>
+	    <!-- <link href="{% static 'bootstrap.min.css' %}"  rel="stylesheet" type="text/css"/> -->
+
+		<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+	    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
+    	<!-- <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script> -->
 
 	</head>
 	<body>
@@ -41,11 +49,21 @@
  		        <li><a href="/add_employee">Add Employee</a></li>
 		      </ul>
 			  	<ul class="nav navbar-nav navbar-right">
-			       <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Setting<span class="caret"></span></a>
-			       		<ul class="dropdown-menu">
-					          <li><a href="/change_password">Change password</a></li>
-					          <li><a href="{% url 'user_logout' %}">Logout</a></li>
-					    </ul>
+			  		{% if user.is_authenticated %}
+			  		<li><a href="Javascript:Void(0);">Welcome <b> {{request.user}} </b></li>
+			       <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#" style="margin-top: -30px;">Setting<span class="caret"></span></a>
+			       	<ul class="dropdown-menu">
+			       		<li><a href="/change_password">Change password</a></li>
+					    <li><a href="{% url 'user_logout' %}">Logout</a></li>
+					</ul>
+			  		{% else %}
+			  		<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Setting<span class="caret"></span></a>
+			       	<ul class="dropdown-menu">
+			       		<li><a href="{% url 'signup' %}">Sign up</a></li>
+						<li><a href="{% url 'user_login' %}">Login here</a>
+					</ul>
+			  		{% endif %}
+
       				</li>
 	        	</ul>
 		    </div>

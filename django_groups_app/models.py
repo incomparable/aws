@@ -3,10 +3,12 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
 
+
 # Create your models here.
 
 class Book_Author(models.Model):
 	name = models.CharField(max_length=30, blank=True, null=True)
+	current_user = models.IntegerField()
 	class Meta:
 		db_table = 'bookauthor'
 		verbose_name_plural = 'Book_Author'
@@ -23,6 +25,7 @@ class Book(models.Model):
 	author_name = models.ForeignKey(Book_Author, blank=True, null=True)
 	description = models.TextField(max_length=500)
 	pages = models.IntegerField(blank=True, null=True)
+	current_user = models.IntegerField()
 	class Meta:
 		db_table = 'book'
 		verbose_name_plural = 'Book'
@@ -40,6 +43,7 @@ class Employee(models.Model):
 	profile = models.CharField(max_length=20, choices=PROFILE_CHOICES)
 	salary = models.IntegerField(null=True, blank=True)
 	address = models.TextField(max_length=300, null=True, blank=True)
+	current_user = models.IntegerField()
 
 	class Meta:
 		db_table = 'employee_record'
@@ -60,3 +64,20 @@ class User_Data(models.Model):
 
 	def __str__(self):
 		return str(self.username)
+
+
+# class UserProfile(models.Model):
+#     user = models.OneToOneField(User)
+#     activation_key = models.CharField(max_length=40, blank=True)
+#     key_expires = models.DateTimeField()
+#     is_active = models.BooleanField(default=False)
+
+#     class Meta:
+#     	db_table = 'userprofile'
+#         verbose_name_plural = 'User profiles'
+#         managed = True
+
+#     def __str__(self):
+#         return self.user.username
+
+    

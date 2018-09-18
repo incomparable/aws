@@ -25,7 +25,6 @@
 	        						<button type="submit" class="btn btn-default">Submit</button>
 	        						<button type="reset" class="btn btn-default">Reset</button>
 	        					</form>
-	        	
 	        				</div>
 	        			</div>
 	        		</div>
@@ -39,9 +38,9 @@
 							<div class="panel panel-default" style="margin-top: 20px;">
 		        				<div class="panel-heading" style="text-align:center;"><h4>View Book Record</h4>
 		        				</div>
-		        				<div class="panel-body">
-								<div style="overflow-x:auto;">
-									<table class= "table table-hover table-bordered"  >
+		        				<div class="panel-body" >
+		        					<div style="overflow-x:auto;">
+									<table class= "table table-hover table-bordered" >
 										<thead>
 											<tr>
 												<th style="text-align:center; color:White; background: grey; font-size: 15px;">ID</th>
@@ -64,8 +63,7 @@
 													<td>{{ book.id }}</td>
 													<td id="{{ book.id }}"><input id="book_title-{{ book.id }}" class="form-control" type="text" value="{{ book.book_title }}" readonly=""></td>
 													{% if book.book_image %}
-														<td><img src="{{ book.book_image.url }}" class="tumbnail" width="50" height="50" 
-														value="{{ book.book_image.url }}" id="book_image-{{book.id}}"></td>
+														<td><img src="{{ book.book_image.url }}" class="tumbnail" width="50" height="50" id="book_image-{{book.id}}"></td>
 													{% else %}
 														<td>Null</td>
 													{% endif %}
@@ -161,7 +159,8 @@
 
 													</div><hr>
 												</form>
-													<div style="overflow-x:auto;">
+												<div style="overflow-x:auto;">
+													
 												<table class= "table table-hover table-bordered"  >
 													<thead>
 														<tr>
@@ -202,7 +201,8 @@
 														{% endfor %}
 
 													</tbody>
-											</table></div>
+											</table>
+										</div>
 										</div>
 									</div>
 								</div>
