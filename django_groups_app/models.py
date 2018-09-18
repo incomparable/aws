@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
@@ -22,7 +21,7 @@ class Book(models.Model):
 	book_title 	= models.CharField(max_length=30, blank=True, null=True)
 	book_image 	= models.FileField(upload_to='image/book_image', null=True, blank=True, help_text="Upload only .png, .jpg & .jpeg image extension.")
 	series 		= models.FloatField(blank=True, null=True)
-	author_name = models.ForeignKey(Book_Author, blank=True, null=True)
+	author_name = models.ForeignKey(Book_Author, blank=True, null=True, on_delete=models.CASCADE)
 	description = models.TextField(max_length=500)
 	pages = models.IntegerField(blank=True, null=True)
 	current_user = models.IntegerField()
@@ -55,7 +54,7 @@ class Employee(models.Model):
 		
 
 class User_Data(models.Model):
-	username = models.ForeignKey(User)
+	username = models.ForeignKey(User, on_delete=models.CASCADE,)
 	age = models.IntegerField(null=True, blank=True)
 	class Meta:
 		db_table = 'userdata'

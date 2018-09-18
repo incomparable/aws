@@ -21,4 +21,4 @@ urlpatterns = [
 	url(r'^get_book_data', views.get_book_data, name='get_book_data'),
 	url(r'^delete_book_data', views.delete_book_data, name='delete_book_data'),
 	
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) 
+]

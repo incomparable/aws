@@ -285,7 +285,7 @@ def get_book_data(request):
             book_title = item.get('ajax_book_title', None)
         
             image = item.get('ajax_book_image', None)
-            book_image1 = image.split('/', 4)[4]
+            book_image1 = image.split('/', 2)[2]
             book_image = "/" + book_image1
 
             # print(image, '.....675767657675.....', book_image1)
